@@ -1,0 +1,147 @@
+---
+title: "Introduction to 'pokemaster'"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pokemaster}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pokemaster)
+```
+
+
+## Motivation 
+
+The world of Pokémon has captured the hearts and imaginations of people of all ages around the world. From its humble beginnings as a video game to its evolution into a massive media franchise spanning anime, movies, card games, and more, Pokemon has become a cultural phenomenon. As such, there is a great interest among fans to explore and analyze the vast amount of data surrounding this world. The goal of `pokemaster` is to explore the Pokémon API. This package exploits the information of the Pokémon of the first 3 generations (which corresponds to the ids 1 to 386). 
+
+
+## Overview of Functions
+
+Our package has 4 main functions. 
+
+- The first function is **pokedex**. It is a function that creates dataframe with features like id, name, stats and types. The default output of the function is a dataframe of all Pokémons, but the user can retrieve the information of only the Pokémons of interest. To do so, the user can either use valid Pokémon names, their ids, or a combination of both.
+
+- The second function is **pokegen**. It takes an input of a vector of positive integer from 1 to 6 (since a Pokémon team can consist of up to 6 Pokémons). Example:  pokegen(3) generate a vector of 3 random Pokémons. 
+
+- The third function is **pokecard**, which generates a flashcard of the team. It takes the input of vector of up to 6 Pokémons and has an output of an image/collage with the sprites of the Pokémons. The user can also set a title and the color of the border of the flashcard.
+
+- The forth function is **pokestats**. It is a function that plots barplot of the basic stats for each Pokémon. It takes an input vector of up to 6 Pokémons, and generates a barplot using the ggplot2 library. We provide the visualization for the main 6 stats of the game: hitpoints (HP), Attack, Defense, Special Attack, Special Defense and Speed.
+
+## Example 1 Pokemon Stats Comparison
+
+The first example illustrates how our package can answer a question like:
+
+- "How is Pikachu's stats compared with Eevee's?"
+
+This can be best answered by the **pokedex** function so we have see the stats of the two Pokémons., as well as the **pokestats** function because it nicely provides visualization of the key stats of the Pokémons.
+
+```{r}
+pokedex(c("pikachu", "eevee"))
+```
+
+Through this data frame, we can directly compare the above two Pokémons on the key stats such as weight, height, base experience, hp, attack, defense, special attack, special defense, speed, and their types.
+
+```{r}
+pokestats(myteam = c("pikachu","eevee"), "Pikachu v.s. Eevee")
+```
+
+According to the above visualization, Eevee has a higher hp, about the same attack, higher defense, less special attack, more special defense, and much less speed than Pikachu. 
+
+## Example 2 Pokecard Generation
+
+The second example illustrates how our package can answer a question like: 
+
+- "I am a Pokemon enthusiast. How can I generate a few postcards for my favorite pokemon team: Pikachu, Eevee, Charizard, Snorlax, Ditto, and Venusaur I want a postcard for the first three, the second three, and one for the whole team."
+
+This can be best answered by the **pokecard** function because it generates a flashcard of the selected Pokemon. 
+
+```{r}
+pokecard(myteam = c("pikachu", "eevee", "charizard"), 
+         color="LightBlue", title="Pikachu, Eevee, Charizard")
+```
+```{r}
+pokecard(myteam = c("snorlax", "ditto", "venusaur"), 
+         color="LightBlue", title="Snorlax, Ditto, Venusaur")
+```
+
+```{r}
+pokecard(myteam = 
+           c("pikachu","eevee", "charizard", "snorlax", "ditto", "venusaur"), 
+              color="LightBlue", title="Whole Team")
+```
+
+Through the above code, we can help this Pokemon fan create their favorite postcard!
+
+## Example 3 Stats analysis
+
+The third example illustrates how our package can answer a question like: 
+
+- "I want to see how my favorite Pokemon team A: pikachu, eevee, charizard, snorlax, ditto, and venusaur compare to another team B, which is composed of squirtle, mew, bulbasaur, rattata, pidgey, and psyduck."
+
+This question can be answered by showing the stats, creating the postcard to see how the teams are different visually, and by the comparing their stats in a bar plot.
+
+```{r}
+pokedex(c("pikachu","eevee", "charizard", "snorlax", "ditto", "venusaur"))
+```
+
+```{r}
+pokedex(c("squirtle","mew", "bulbasaur", "rattata", "pidgey", "psyduck"))
+```
+
+From the above two tables, we can compare and contrast the specific stat that the pokemon fan is interested in within the two teams and across the teams.
+
+```{r}
+pokecard(myteam = 
+           c("pikachu","eevee", "charizard", "snorlax", "ditto", "venusaur"), 
+              color="LightBlue", title="Team 1")
+```
+```{r}
+pokecard(myteam = 
+           c("squirtle","mew", "bulbasaur", "rattata", "pidgey", "psyduck"), 
+              color="LightBlue", title="Team 2")
+```
+
+We also generated beautiful graphics for the two teams.
+
+```{r}
+pokestats(myteam = c("pikachu","eevee", "charizard", "snorlax", "ditto", "venusaur"),
+          "Team 1")
+```
+
+```{r}
+pokestats(myteam = c("squirtle","mew", "bulbasaur", "rattata", "pidgey", "psyduck"),
+          "Team 2")
+```
+
+From the above two bar plots, we can see how each of the Pokemons in each team can have varying capacities in different stats. From the above analysis, we cannot conclude that any of the team has much higher stats than the other. 
+
+
+## Example 4 Random Pokemon generator
+
+The forth example illustrates how our package can answer a question like: 
+
+- "I don't know to much about Pokemon, but anyways I would like to create a random team and see how good the team is and how it looks like"
+
+```{r}
+myteam <- pokegen()
+```
+```{r}
+pokedex(myteam)
+```
+```{r}
+pokecard(myteam, "My random team", color='red')
+```
+```{r}
+pokestats(myteam, "My random team")
+```
+```
+Nice! you get a very good team! You can further explore their stats and play around with new random teams!
